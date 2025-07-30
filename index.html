@@ -1,16 +1,164 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" >
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome Deepika</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Montserrat', sans-serif;
+      background: #0d001f;
+      overflow: hidden;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 480px;
+      padding: 2rem 2rem;
+      background: rgba(255 255 255 / 0.05);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 4rem;
+      letter-spacing: 5px;
+      color: #ff49c1;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-weight: 600;
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      color: #f9c2e6;
+    }
+
+    a.button {
+      display: inline-block;
+      padding: 16px 50px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: white;
+      text-decoration: none;
+      background: linear-gradient(45deg, #ff49c1, #d0007a);
+      border-radius: 50px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    a.button:hover {
+      opacity: 0.85;
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 3rem;
+        letter-spacing: 3px;
+      }
+      p {
+        font-size: 1rem;
+      }
+      a.button {
+        padding: 14px 36px;
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <center>
-		<h1>
-			Welcome Deepika 
-			
-		</h1><br><br>
-		<a href="bday4.html">Click Here</a>
-	</center>
+
+  <canvas id="canvas"></canvas>
+
+  <div class="content">
+    <h1>Welcome Deepika 💖</h1>
+    <p>Your special day is here — let’s make it unforgettable.</p>
+    <a href="bday4.html" class="button">Click here</a>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const particles = [];
+    const PARTICLE_COUNT = 80;
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        this.size = 2 + Math.random() * 3;
+        this.speedX = (Math.random() - 0.5) * 0.8;
+        this.speedY = (Math.random() - 0.5) * 0.8;
+        this.opacity = 0.1 + Math.random() * 0.4;
+        this.color = `rgba(255, 73, 193, ${this.opacity})`;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > w) this.speedX *= -1;
+        if (this.y < 0 || this.y > h) this.speedY *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size*2);
+        gradient.addColorStop(0, this.color);
+        gradient.addColorStop(1, 'rgba(255, 73, 193, 0)');
+        ctx.fillStyle = gradient;
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    for(let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+
 </body>
 </html>
